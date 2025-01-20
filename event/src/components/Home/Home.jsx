@@ -13,6 +13,13 @@ const HomeCont = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
+  @media (max-width: 768px) {
+    height: auto;
+    background-size: cover;
+    background-position: center;
+    padding: 2rem 1rem;
+  }
 `;
 
 const MainContent = styled.div`
@@ -23,12 +30,20 @@ const MainContent = styled.div`
     font-size: 3rem;
     font-weight: bold;
     margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
   }
 
   p {
     font-size: 1.2rem;
     line-height: 1.6;
     max-width: 600px;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
 `;
 
