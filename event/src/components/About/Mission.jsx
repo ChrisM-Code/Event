@@ -1,13 +1,20 @@
 import styled from "styled-components";
-import Mission from "./Mission";
+import Section from "./Section";
 
 const Container = styled.div`
-  max-width: auto;
-  margin: 2rem auto;
+  margin: 0.5rem auto;
   padding: 1rem;
   background: #fffbeb;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    padding: 0.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 1rem;
+  }
 `;
 
 const Heading = styled.h1`
@@ -27,7 +34,7 @@ const Heading = styled.h1`
   }
 
   @media (min-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
   }
 
   @media (min-width: 1024px) {
@@ -50,25 +57,25 @@ const Paragraph = styled.p`
   }
 `;
 
-function About() {
+function Mission() {
   return (
     <>
       <Container>
         <Heading>
-          About <span>Eventfy</span>
+          Our <span>Mission</span>
         </Heading>
         <Paragraph>
-          Welcome to <strong>Eventfy</strong>, your ultimate destination for
-          discovering and showcasing events happening across various locations!
-          Whether you’re looking for concerts, workshops, festivals, or
-          networking events, Eventfy makes it simple to explore, share, and
-          engage with events near you or anywhere around the globe.
+          At <strong>Eventfy</strong>, we believe in the power of connection.
+          Our mission is to bring people together by making it easy to discover
+          and participate in events that match their interests, passions, and
+          goals. From local community gatherings to international conferences,
+          Eventfy bridges the gap between event organizers and attendees.
         </Paragraph>
       </Container>
 
-      <Mission />
+      <Section />
     </>
   );
 }
 
-export default About;
+export default Mission;
