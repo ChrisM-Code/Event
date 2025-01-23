@@ -1,8 +1,8 @@
 import styled, { keyframes } from "styled-components";
 import { useState, useEffect } from "react";
 import Navigation from "./Navigation";
+import About from "../About/About";
 
-// Keyframes for text motion
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(-20px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -32,13 +32,6 @@ const HomeCont = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
-  @media (max-width: 768px) {
-    height: auto;
-    background-size: cover;
-    background-position: center;
-    padding: 2rem 1rem;
-  }
 `;
 
 const MainContent = styled.div`
@@ -138,6 +131,7 @@ function Home() {
         </MainContent>
         <DateStamp>{currentDate}</DateStamp>
       </HomeCont>
+      <About />
     </>
   );
 }

@@ -4,9 +4,8 @@ import Section from "./Section";
 const Container = styled.div`
   margin: 0.5rem auto;
   padding: 1rem;
-  background: #fffbeb;
+  background: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   @media (min-width: 768px) {
     padding: 0.5rem;
