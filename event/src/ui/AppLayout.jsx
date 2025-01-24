@@ -1,13 +1,15 @@
 import { Outlet } from "react-router-dom";
+import NavBar from "../components/Home/NavBar";
 
-function AppLayout() {
+const AppLayout = () => {
   return (
     <>
+      <NavBar />
       <main>
         <Outlet />
       </main>
     </>
   );
-}
+};
 
 export default AppLayout;

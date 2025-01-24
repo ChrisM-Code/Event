@@ -1,6 +1,5 @@
 import styled, { keyframes } from "styled-components";
 import { useState, useEffect } from "react";
-import Navigation from "./Navigation";
 import About from "../About/About";
 
 const fadeIn = keyframes`
@@ -32,6 +31,13 @@ const HomeCont = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
+  // @media (max-width: 768px) {
+  //   height: auto;
+  //   background-size: cover;
+  //   background-position: center;
+  //   padding: 2rem 1rem;
+  // }
 `;
 
 const MainContent = styled.div`
@@ -123,7 +129,6 @@ function Home() {
 
   return (
     <>
-      <Navigation />
       <HomeCont>
         <MainContent>
           <h1>Welcome to Eventify</h1>
