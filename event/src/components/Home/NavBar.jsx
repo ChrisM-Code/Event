@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "./Logo";
@@ -34,20 +34,52 @@ const NavLinks = styled.div`
       color: #2dd4bf;
     }
   }
+
+  @media (max-width: 768px) {
+    display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
+    flex-direction: column;
+    gap: 0.5rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    align-items: center;
+    background-color: rgba(251, 146, 60, 0.95);
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const MenuIcon = styled.div`
+  display: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
 `;
 
 function NavBar() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
+  // Close the menu when the route changes
   useEffect(() => {
-    const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-    scrollToTop();
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location.pathname]);
 
   return (
     <NavbarWrapper>
       <Logo />
-      <NavLinks>
+      <MenuIcon onClick={toggleMenu}>{menuOpen ? "✖" : "☰"}</MenuIcon>
+      <NavLinks isOpen={menuOpen}>
         <Link to="/" className={location.pathname === "/" ? "active" : ""}>
           Home
         </Link>
@@ -56,6 +88,12 @@ function NavBar() {
           className={location.pathname === "/about" ? "active" : ""}
         >
           About
+        </Link>
+        <Link
+          to="/event"
+          className={location.pathname === "/event" ? "active" : ""}
+        >
+          Event
         </Link>
       </NavLinks>
     </NavbarWrapper>
