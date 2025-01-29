@@ -90,10 +90,10 @@ function NavBar() {
           About
         </Link>
         <Link
-          to="/event"
-          className={location.pathname === "/event" ? "active" : ""}
+          to="/events"
+          className={location.pathname === "/events" ? "active" : ""}
         >
-          Event
+          Events
         </Link>
       </NavLinks>
     </NavbarWrapper>
