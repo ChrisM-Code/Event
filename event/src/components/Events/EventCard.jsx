@@ -1,23 +1,17 @@
+import PropTypes from "prop-types";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-const Container = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0.5rem;
-  background: #f7fafc;
-  min-height: auto;
-`;
-
-const Card = styled.div`
-  background: #fffff;
+const Card = styled(motion.div)`
+  background: #ffffff;
   border-radius: 0.5rem;
-  padding: 0.2rem;
+  padding: 0.1rem;
   width: 350px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
     width: 100%;
-    padding: 0.1rem;
+    padding: 0.3rem;
   }
 `;
 
@@ -38,18 +32,18 @@ const Title = styled.h2`
   margin-top: 8px;
 
   @media (max-width: 768px) {
-    font-size: 1.125rem; /* Adjust font size for smaller screens */
+    font-size: 1.125rem;
   }
 `;
 
 const InfoText = styled.p`
-  color: #4a5568;
-  font-size: 0.875rem;
+  color: black;
+  font-size: 0.9rem;
   margin-top: 4px;
 
   @media (max-width: 768px) {
-    font-size: 0.75rem; /* Reduce font size for smaller screens */
-    margin-top: 6px;
+    font-size: 0.75rem;
+    margin-top: 4px;
   }
 `;
 
@@ -59,18 +53,31 @@ function EventCard({ event }) {
   }
 
   return (
-    <Container>
-      <Card>
-        {event.image && <Image src={event.image} alt={event.title} />}
-        <Title>{event.title}</Title>
-        <InfoText>
-          {event.date} | {event.time}
-        </InfoText>
-        <InfoText>{event.location}</InfoText>
-        <InfoText>{event.details}</InfoText>
-      </Card>
-    </Container>
+    <Card
+      whileTap={{ x: -100, opacity: 0.7 }} // Adds swipe effect when tapped
+      whileHover={{ scale: 1.02 }}
+    >
+      {event.image && <Image src={event.image} alt={event.title} />}
+      <Title>{event.title}</Title>
+      <InfoText>
+        {event.date} | {event.time}
+      </InfoText>
+      <InfoText>{event.location}</InfoText>
+      <InfoText>{event.details}</InfoText>
+    </Card>
   );
 }
+
+// PropTypes for validation
+EventCard.propTypes = {
+  event: PropTypes.shape({
+    image: PropTypes.string,
+    title: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    time: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    details: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default EventCard;
