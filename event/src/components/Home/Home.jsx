@@ -1,6 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { useState, useEffect } from "react";
 import About from "../About/About";
+import Events from "../Events/Events";
 
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(-20px); }
@@ -137,6 +138,7 @@ function Home() {
         <DateStamp>{currentDate}</DateStamp>
       </HomeCont>
       <About />
+      <Events />
     </>
   );
 }
