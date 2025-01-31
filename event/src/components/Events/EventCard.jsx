@@ -53,10 +53,7 @@ function EventCard({ event }) {
   }
 
   return (
-    <Card
-      whileTap={{ x: -100, opacity: 0.7 }} // Adds swipe effect when tapped
-      whileHover={{ scale: 1.02 }}
-    >
+    <Card whileHover={{ scale: 1.02 }}>
       {event.image && <Image src={event.image} alt={event.title} />}
       <Title>{event.title}</Title>
       <InfoText>

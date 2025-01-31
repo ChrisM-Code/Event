@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "./Logo";
+import Highlights from "../Events/Highlights";
 
 const NavbarWrapper = styled.nav`
   position: sticky;
@@ -13,6 +14,10 @@ const NavbarWrapper = styled.nav`
   align-items: center;
   padding: 0.5rem 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const NavLinks = styled.div`
@@ -61,6 +66,16 @@ const MenuIcon = styled.div`
   }
 `;
 
+const HighlightSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    gap: 0.5rem;
+  }
+`;
+
 function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
@@ -95,7 +110,16 @@ function NavBar() {
         >
           Events
         </Link>
+        <Link
+          to="/directions"
+          className={location.pathname === "/directions" ? "active" : ""}
+        >
+          Directions
+        </Link>
       </NavLinks>
+      <HighlightSection>
+        <Highlights />
+      </HighlightSection>
     </NavbarWrapper>
   );
 }
