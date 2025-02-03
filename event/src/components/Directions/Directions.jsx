@@ -1,8 +1,58 @@
+import styled from "styled-components";
+import Buttons from "./Buttons";
+
+const Container = styled.div`
+  text-align: center;
+  padding: 1rem;
+
+  @media (max-width: 600px) {
+    padding: 0.5rem;
+  }
+`;
+
+const Heading = styled.h1`
+  font-size: 2em;
+  color: #333;
+
+  span {
+    color: #ff4500;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #fb923c;
+    }
+  }
+
+  @media (max-width: 600px) {
+    font-size: 1.5em;
+  }
+`;
+
+const Message = styled.p`
+  font-size: 1.2em;
+  color: #555;
+  margin-top: 0.5rem;
+
+  @media (max-width: 600px) {
+    font-size: 1em;
+  }
+`;
+
 function Directions() {
   return (
-    <div>
-      <h1>Directions</h1>
-    </div>
+    <>
+      <Container>
+        <Heading>
+          Find Your Way <span>with Ease</span>
+        </Heading>
+        <Message>
+          Stay on Eventify for the best experience. Use our real-time directions
+          to get to your event hassle-free!
+        </Message>
+      </Container>
+      <Buttons />
+    </>
   );
 }
 
