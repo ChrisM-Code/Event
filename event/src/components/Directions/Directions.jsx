@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Buttons from "./Buttons";
+import Map from "./Map";
 
 const Container = styled.div`
   text-align: center;
@@ -52,6 +53,7 @@ function Directions() {
         </Message>
       </Container>
       <Buttons />
+      <Map />
     </>
   );
 }
