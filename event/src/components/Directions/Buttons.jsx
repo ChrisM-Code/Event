@@ -1,5 +1,8 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FaCalendarAlt, FaMapMarkerAlt, FaDirections } from "react-icons/fa";
+import Modal from "./Modal"; // Assume you have a Modal component
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -47,23 +50,72 @@ const Button = styled.button`
   }
 `;
 
-const Buttons = () => {
-  const handleRedirect = (url) => {
-    window.location.href = url;
+const Buttons = ({ events }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => console.error("Error fetching location:", error),
+      { enableHighAccuracy: true }
+    );
+  }, []);
+
+  const handleEventSelection = (event) => {
+    setSelectedEvent(event);
+    setShowModal(false);
   };
 
   return (
-    <ButtonContainer>
-      <Button onClick={() => handleRedirect("/events")}>
-        <FaCalendarAlt /> Events
-      </Button>
-      <Button onClick={() => handleRedirect("/directions")}>
-        <FaMapMarkerAlt /> Map
-      </Button>
-      <Button onClick={() => handleRedirect("/directions")}>
-        <FaDirections /> Directions
-      </Button>
-    </ButtonContainer>
+    <>
+      <ButtonContainer>
+        <Button onClick={() => (window.location.href = "/events")}>
+          <FaCalendarAlt /> Events
+        </Button>
+        <Button onClick={() => (window.location.href = "/directions")}>
+          <FaMapMarkerAlt /> Map
+        </Button>
+        <Button onClick={() => setShowModal(true)}>
+          <FaDirections /> Directions
+        </Button>
+      </ButtonContainer>
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <h2>Select an Event</h2>
+          <ul>
+            {events.map((event) => (
+              <li key={event.id}>
+                <button onClick={() => handleEventSelection(event)}>
+                  {event.title} - {event.location}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Modal>
+      )}
+      {selectedEvent && userLocation && (
+        <MapContainer
+          center={userLocation}
+          zoom={13}
+          style={{ height: "400px", width: "100%" }}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Marker position={userLocation}>
+            <Popup>Your Location</Popup>
+          </Marker>
+          <Marker position={[selectedEvent.lat, selectedEvent.lng]}>
+            <Popup>{selectedEvent.title}</Popup>
+          </Marker>
+        </MapContainer>
+      )}
+    </>
   );
 };
 

@@ -2,6 +2,7 @@ import styled, { keyframes } from "styled-components";
 import { useState, useEffect } from "react";
 import About from "../About/About";
 import Events from "../Events/Events";
+import Directions from "../Directions/Directions";
 
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(-20px); }
@@ -139,6 +140,7 @@ function Home() {
       </HomeCont>
       <About />
       <Events />
+      <Directions />
     </>
   );
 }
