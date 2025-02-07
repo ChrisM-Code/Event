@@ -1,36 +1,81 @@
-import { useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { MapContext } from "./MapContext";
-import styled from "styled-components";
 import "leaflet/dist/leaflet.css";
-
-const StyledMapContainer = styled(MapContainer)`
-  height: 500px;
-  width: 100%;
-  border-radius: 10px;
-
-  @media (max-width: 768px) {
-    height: 300px;
-  }
-
-  @media (max-width: 480px) {
-    height: 250px;
-  }
-`;
+import L from "leaflet";
+import RoutingMachine from "react-leaflet-routing-machine";
+import { MapContext } from "../Maps/MapContext";
 
 const MapComponent = () => {
-  const { mapView } = useContext(MapContext);
+  const { userLocation, destination, isMapVisible } = useContext(MapContext);
+  const [eventCoordinates, setEventCoordinates] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (destination) {
+      setLoading(true);
+      fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${destination}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.length > 0) {
+            setEventCoordinates([
+              parseFloat(data[0].lat),
+              parseFloat(data[0].lon),
+            ]);
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching location:", error);
+          setLoading(false);
+        });
+    }
+  }, [destination]);
+
+  if (!isMapVisible) {
+    return <p>Click an event location to view directions.</p>;
+  }
 
   return (
-    <StyledMapContainer center={mapView.center} zoom={mapView.zoom}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <Marker position={mapView.center}>
-        <Popup>You are here!</Popup>
-      </Marker>
-    </StyledMapContainer>
+    <MapContainer
+      center={userLocation || [0.0236, 37.9062]}
+      zoom={13}
+      style={{ height: "500px", width: "100%" }}
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+      {loading && <p>Loading event location...</p>}
+
+      {userLocation && (
+        <Marker
+          position={userLocation}
+          icon={L.icon({
+            iconUrl:
+              "https://leafletjs.com/examples/custom-icons/leaf-green.png",
+            iconSize: [25, 41],
+          })}
+        >
+          <Popup>You are here</Popup>
+        </Marker>
+      )}
+
+      {eventCoordinates && (
+        <Marker
+          position={eventCoordinates}
+          icon={L.icon({
+            iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-red.png",
+            iconSize: [25, 41],
+          })}
+        >
+          <Popup>Event: {destination}</Popup>
+        </Marker>
+      )}
+
+      {userLocation && eventCoordinates && (
+        <RoutingMachine waypoints={[userLocation, eventCoordinates]} />
+      )}
+    </MapContainer>
   );
 };
 
