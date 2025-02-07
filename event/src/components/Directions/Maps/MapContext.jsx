@@ -10,10 +10,18 @@ export const MapProvider = ({ children }) => {
     zoom: 13,
   });
 
+  const [userLocation, setUserLocation] = useState(null);
+  const [destination, setDestination] = useState(null);
+  const [isMapVisible, setIsMapVisible] = useState(false); // ✅ Added visibility state
+
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          setUserLocation([
+            position.coords.latitude,
+            position.coords.longitude,
+          ]);
           setMapView({
             center: [position.coords.latitude, position.coords.longitude],
             zoom: 13,
@@ -21,14 +29,28 @@ export const MapProvider = ({ children }) => {
         },
         (error) => {
           console.error("Geolocation error:", error);
-          // Keep the default location if geolocation fails
         }
       );
     }
   }, []);
 
+  const updateDestination = (location) => {
+    setDestination(location);
+    setIsMapVisible(true); // ✅ Trigger map to show
+  };
+
   return (
-    <MapContext.Provider value={{ mapView }}>{children}</MapContext.Provider>
+    <MapContext.Provider
+      value={{
+        mapView,
+        userLocation,
+        destination,
+        isMapVisible,
+        updateDestination,
+      }}
+    >
+      {children}
+    </MapContext.Provider>
   );
 };
 
