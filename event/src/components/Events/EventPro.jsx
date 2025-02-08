@@ -27,7 +27,7 @@ const EventPro = () => {
       title: "Blockchain Summit 2025",
       date: "April 15, 2025",
       time: "9:00 AM - 5:00 PM",
-      location: "San Francisco Tech Hub",
+      location: "Swahilipot Hub",
       details:
         "Explore the future of blockchain technology at the Blockchain Summit. Learn from top experts, and discover how blockchain is transforming industries worldwide.",
     },
@@ -36,7 +36,7 @@ const EventPro = () => {
       title: "Blockchain Summit 2025",
       date: "April 15, 2025",
       time: "9:00 AM - 5:00 PM",
-      location: "San Francisco Tech Hub",
+      location: "Sote Hub",
       details:
         "Explore the future of blockchain technology at the Blockchain Summit. Learn from top experts, and discover how blockchain is transforming industries worldwide.",
     },

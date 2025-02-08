@@ -58,8 +58,8 @@ function EventCard({ event }) {
   }
 
   const handleLocationClick = () => {
-    updateDestination(event.location); // ✅ Corrected to use updateDestination
-    navigate("/map"); // ✅ Redirect to map page
+    updateDestination(event.location);
+    navigate("/directions", { state: { location: event.location } });
   };
 
   return (
