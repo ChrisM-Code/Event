@@ -49,9 +49,14 @@ const LocationButton = styled.button`
 
 const EventInfo = ({ children }) => <InfoText>{children}</InfoText>;
 
+// ✅ Add prop validation for `EventInfo`
+EventInfo.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 function EventCard({ event }) {
   const navigate = useNavigate();
-  const { updateDestination } = useContext(MapContext); // ✅ Correct function name
+  const { updateDestination } = useContext(MapContext);
 
   if (!event) {
     return <p>No event data available.</p>;
@@ -77,9 +82,10 @@ function EventCard({ event }) {
   );
 }
 
+// ✅ Improved prop validation
 EventCard.propTypes = {
   event: PropTypes.shape({
-    image: PropTypes.string,
+    image: PropTypes.string, // Optional
     title: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     time: PropTypes.string.isRequired,

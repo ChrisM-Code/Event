@@ -1,12 +1,14 @@
 import { useEffect, useState, useContext } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import RoutingMachine from "react-leaflet-routing-machine";
 import { MapContext } from "../Maps/MapContext";
 import styled from "styled-components";
+import "leaflet-routing-machine";
+import "leaflet-control-geocoder";
+import PropTypes from "prop-types";
 
-// Styled container for better layout
+// Styled container
 const MapWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -22,11 +24,12 @@ const MapWrapper = styled.div`
   background: white;
 `;
 
-const LoadingMessage = styled.p`
-  font-size: 1.2rem;
+const DistanceInfo = styled.p`
+  font-size: 1rem;
   color: #ff4500;
   font-weight: bold;
   text-align: center;
+  margin-top: 10px;
 `;
 
 const MapComponent = () => {
@@ -34,11 +37,13 @@ const MapComponent = () => {
   const [eventCoordinates, setEventCoordinates] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [distance, setDistance] = useState(null);
 
   useEffect(() => {
     if (destination) {
       setLoading(true);
       setError(null);
+      setEventCoordinates(null);
 
       fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${destination}`
@@ -46,12 +51,16 @@ const MapComponent = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.length > 0) {
-            setEventCoordinates([
-              parseFloat(data[0].lat),
-              parseFloat(data[0].lon),
-            ]);
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            setEventCoordinates([lat, lon]);
+
+            // Calculate distance
+            if (userLocation) {
+              setDistance(calculateDistance(userLocation, [lat, lon]));
+            }
           } else {
-            setError("Oops!!! Location not found. Try another event.");
+            setError("Oops! Location not found. Try another event.");
           }
         })
         .catch(() => {
@@ -61,62 +70,135 @@ const MapComponent = () => {
           setLoading(false);
         });
     }
-  }, [destination]);
+  }, [destination, userLocation]);
+
+  // Function to calculate distance using Haversine formula
+  const calculateDistance = (loc1, loc2) => {
+    const toRad = (value) => (value * Math.PI) / 180;
+    const R = 6371; // Earth's radius in km
+    const dLat = toRad(loc2[0] - loc1[0]);
+    const dLon = toRad(loc2[1] - loc1[1]);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(loc1[0])) *
+        Math.cos(toRad(loc2[0])) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return (R * c).toFixed(2); // Distance in km
+  };
 
   if (!isMapVisible) {
     return (
-      <LoadingMessage>
-        Click an event location to view directions.
-      </LoadingMessage>
+      <DistanceInfo>Click an event location to view directions.</DistanceInfo>
     );
   }
 
   return (
     <MapWrapper>
-      {loading && <LoadingMessage>Loading event location...</LoadingMessage>}
-      {error && <LoadingMessage>{error}</LoadingMessage>}
+      {loading && <DistanceInfo>Loading event location...</DistanceInfo>}
+      {error && <DistanceInfo>{error}</DistanceInfo>}
 
       {!loading && !error && (
-        <MapContainer
-          center={userLocation || [0.0236, 37.9062]}
-          zoom={13}
-          style={{ width: "100%", height: "100%", borderRadius: "10px" }}
-        >
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <>
+          <MapContainer
+            center={userLocation || [0.0236, 37.9062]}
+            zoom={13}
+            style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-          {userLocation && (
-            <Marker
-              position={userLocation}
-              icon={L.icon({
-                iconUrl:
-                  "https://leafletjs.com/examples/custom-icons/leaf-green.png",
-                iconSize: [25, 41],
-              })}
-            >
-              <Popup>You are here</Popup>
-            </Marker>
-          )}
+            {userLocation && (
+              <Marker
+                position={userLocation}
+                icon={L.icon({
+                  iconUrl:
+                    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-green.png",
+                  iconSize: [30, 45],
+                })}
+              >
+                <Popup>Your Location</Popup>
+              </Marker>
+            )}
 
-          {eventCoordinates && (
-            <Marker
-              position={eventCoordinates}
-              icon={L.icon({
-                iconUrl:
-                  "https://leafletjs.com/examples/custom-icons/leaf-red.png",
-                iconSize: [25, 41],
-              })}
-            >
-              <Popup>Event: {destination}</Popup>
-            </Marker>
-          )}
+            {eventCoordinates && (
+              <Marker
+                position={eventCoordinates}
+                icon={L.icon({
+                  iconUrl:
+                    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-red.png",
+                  iconSize: [30, 45],
+                })}
+              >
+                <Popup>Event: {destination}</Popup>
+              </Marker>
+            )}
 
-          {userLocation && eventCoordinates && (
-            <RoutingMachine waypoints={[userLocation, eventCoordinates]} />
-          )}
-        </MapContainer>
+            {userLocation && eventCoordinates && (
+              <Routing
+                userLocation={userLocation}
+                eventCoordinates={eventCoordinates}
+              />
+            )}
+          </MapContainer>
+
+          {distance && <DistanceInfo>Distance: {distance} km</DistanceInfo>}
+        </>
       )}
     </MapWrapper>
   );
+};
+
+// Routing component for rendering the route
+const Routing = ({ userLocation, eventCoordinates }) => {
+  const map = useMap();
+  const [routingControl, setRoutingControl] = useState(null);
+
+  useEffect(() => {
+    if (!userLocation || !eventCoordinates) return;
+
+    // Remove existing routing if any
+    if (routingControl) {
+      map.removeControl(routingControl);
+    }
+
+    const newRoutingControl = L.Routing.control({
+      waypoints: [L.latLng(userLocation), L.latLng(eventCoordinates)],
+      routeWhileDragging: true,
+      lineOptions: {
+        styles: [{ color: "#007bff", weight: 6, opacity: 0.8 }],
+      },
+      router: L.Routing.osrmv1({
+        serviceUrl: "https://router.project-osrm.org/route/v1",
+      }),
+      show: false,
+      createMarker: (i, waypoint) => {
+        return L.marker(waypoint.latLng, {
+          icon: L.icon({
+            iconUrl:
+              i === 0
+                ? "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
+                : "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
+            iconSize: [30, 45],
+          }),
+        });
+      },
+    }).addTo(map);
+
+    setRoutingControl(newRoutingControl);
+
+    return () => {
+      map.removeControl(newRoutingControl);
+    };
+  }, [map, userLocation, eventCoordinates]);
+
+  return null;
+};
+
+// ✅ Add PropTypes for validation
+Routing.propTypes = {
+  userLocation: PropTypes.arrayOf(PropTypes.number).isRequired,
+  eventCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
 export default MapComponent;
