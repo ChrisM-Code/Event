@@ -79,9 +79,7 @@ const Buttons = ({ events }) => {
         <Button onClick={() => (window.location.href = "/events")}>
           <FaCalendarAlt /> Events
         </Button>
-        <Button onClick={() => (window.location.href = "/directions")}>
-          <FaMapMarkerAlt /> Map
-        </Button>
+
         <Button onClick={() => setShowModal(true)}>
           <FaDirections /> Directions
         </Button>
