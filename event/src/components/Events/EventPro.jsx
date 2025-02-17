@@ -12,29 +12,37 @@ const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
 `;
-
 const PastEventsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: clamp(1rem, 2vw, 0.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.5rem;
   justify-content: center;
-  padding: clamp(0.5rem, 2vw, 2rem);
+  align-items: start;
+  padding: 1.5rem;
+  max-width: 1200px;
   margin: 0 auto;
 `;
 
 const PastEventCard = styled.div`
-  padding: clamp(0.5rem, 2vw, 2rem);
-  border-radius: 8px;
-  margin: 0 auto;
-  opacity: 0.8;
-  transition: opacity 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 10px;
+  transition: transform 0.3s ease, opacity 0.3s;
   pointer-events: none;
+
+  &:hover {
+    transform: scale(1);
+    opacity: 3;
+  }
 `;
 
 const H2 = styled.h2`
   font-size: 1.2rem;
   color: #333;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0 rem;
   text-align: center;
 
   span {
@@ -77,7 +85,7 @@ const EventPro = () => {
     {
       image: "eve3.jpg",
       title: "Blockchain Summit 2025",
-      date: "February 11, 2025",
+      date: "February 18, 2025",
       time: "9:00 PM - 9:30 PM",
       location: "Mombasa",
       details:
@@ -95,8 +103,17 @@ const EventPro = () => {
     {
       image: "eve4.jpg",
       title: "Blockchain Summit 2025",
-      date: "February 11, 2025",
+      date: "February 15, 2025",
       time: "9:00 PM - 9:30 PM",
+      location: "Mombasa",
+      details:
+        "Explore the future of blockchain technology at the Blockchain Summit.",
+    },
+    {
+      image: "eve4.jpg",
+      title: "Blockchain Summit 2025",
+      date: "February 15, 2025",
+      time: "9:00 PM - 5:30 PM",
       location: "Mombasa",
       details:
         "Explore the future of blockchain technology at the Blockchain Summit.",
@@ -104,7 +121,7 @@ const EventPro = () => {
     {
       image: "eve2.jpg",
       title: "Blockchain Summit 2025",
-      date: "February 11, 2025",
+      date: "February 14, 2025",
       time: "9:00 PM - 9:30 PM",
       location: "Mombasa",
       details:
@@ -125,12 +142,7 @@ const EventPro = () => {
 
     events.forEach((event) => {
       const eventDate = new Date(event.date);
-      const timeDifference = today - eventDate;
-      const daysPassed = timeDifference / (1000 * 60 * 60 * 24);
-
-      if (daysPassed >= 4) {
-        return; // Exclude from active events
-      } else if (daysPassed >= 2) {
+      if (eventDate < today) {
         newInactiveEvents.push(event);
       } else {
         newActiveEvents.push(event);
@@ -140,7 +152,7 @@ const EventPro = () => {
     setInactiveEvents(newInactiveEvents);
     setEvents(newActiveEvents);
     setLoading(false);
-  }, []); // ✅ Removed `events` dependency to prevent infinite re-renders
+  }, []);
 
   const handleEventClick = (event) => {
     const eventDate = new Date(event.date);
