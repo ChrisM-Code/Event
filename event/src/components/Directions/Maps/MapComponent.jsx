@@ -55,7 +55,6 @@ const MapComponent = () => {
             const lon = parseFloat(data[0].lon);
             setEventCoordinates([lat, lon]);
 
-            // Calculate distance
             if (userLocation) {
               setDistance(calculateDistance(userLocation, [lat, lon]));
             }
@@ -72,10 +71,9 @@ const MapComponent = () => {
     }
   }, [destination, userLocation]);
 
-  // Function to calculate distance using Haversine formula
   const calculateDistance = (loc1, loc2) => {
     const toRad = (value) => (value * Math.PI) / 180;
-    const R = 6371; // Earth's radius in km
+    const R = 6371;
     const dLat = toRad(loc2[0] - loc1[0]);
     const dLon = toRad(loc2[1] - loc1[1]);
     const a =
@@ -85,7 +83,7 @@ const MapComponent = () => {
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (R * c).toFixed(2); // Distance in km
+    return (R * c).toFixed(2);
   };
 
   if (!isMapVisible) {
@@ -148,7 +146,6 @@ const MapComponent = () => {
   );
 };
 
-// Routing component for rendering the route
 const Routing = ({ userLocation, eventCoordinates }) => {
   const map = useMap();
   const [routingControl, setRoutingControl] = useState(null);
@@ -156,21 +153,19 @@ const Routing = ({ userLocation, eventCoordinates }) => {
   useEffect(() => {
     if (!userLocation || !eventCoordinates) return;
 
-    // Remove existing routing if any
+    // Remove any previous control
     if (routingControl) {
       map.removeControl(routingControl);
     }
 
-    const newRoutingControl = L.Routing.control({
+    const control = L.Routing.control({
       waypoints: [L.latLng(userLocation), L.latLng(eventCoordinates)],
-      routeWhileDragging: true,
       lineOptions: {
         styles: [{ color: "#007bff", weight: 6, opacity: 0.8 }],
       },
       router: L.Routing.osrmv1({
         serviceUrl: "https://router.project-osrm.org/route/v1",
       }),
-      show: false,
       createMarker: (i, waypoint) => {
         return L.marker(waypoint.latLng, {
           icon: L.icon({
@@ -182,19 +177,30 @@ const Routing = ({ userLocation, eventCoordinates }) => {
           }),
         });
       },
+      // ✅ Ensure panel is hidden
+      show: false,
+      addWaypoints: false,
+      draggableWaypoints: false,
+      fitSelectedRoutes: true,
+      routeWhileDragging: false,
+      showAlternatives: false,
+      collapsible: false,
     }).addTo(map);
 
-    setRoutingControl(newRoutingControl);
+    // ✅ Remove routing panel DOM manually if it still renders
+    const panel = document.querySelector(".leaflet-routing-container");
+    if (panel) panel.style.display = "none";
+
+    setRoutingControl(control);
 
     return () => {
-      map.removeControl(newRoutingControl);
+      map.removeControl(control);
     };
   }, [map, userLocation, eventCoordinates]);
 
   return null;
 };
 
-// ✅ Add PropTypes for validation
 Routing.propTypes = {
   userLocation: PropTypes.arrayOf(PropTypes.number).isRequired,
   eventCoordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
