@@ -70,7 +70,6 @@ const Buttons = ({ events }) => {
 
   const handleEventSelection = (event) => {
     setSelectedEvent(event);
-    setShowModal(false);
   };
 
   return (

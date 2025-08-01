@@ -76,7 +76,7 @@ const HighlightSection = styled.div`
   }
 `;
 
-function NavBar() {
+function NavBar({ hasNewEvent, onHighlightClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -118,7 +118,7 @@ function NavBar() {
         </Link>
       </NavLinks>
       <HighlightSection>
-        <Highlights />
+        <Highlights hasNewEvent={hasNewEvent} onClick={onHighlightClick} />{" "}
       </HighlightSection>
     </NavbarWrapper>
   );

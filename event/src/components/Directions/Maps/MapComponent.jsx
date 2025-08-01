@@ -114,7 +114,7 @@ const MapComponent = () => {
                 icon={L.icon({
                   iconUrl:
                     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-green.png",
-                  iconSize: [30, 45],
+                  iconSize: [10, 15],
                 })}
               >
                 <Popup>Your Location</Popup>
@@ -141,7 +141,6 @@ const MapComponent = () => {
               />
             )}
           </MapContainer>
-
           {distance && <DistanceInfo>Distance: {distance} km</DistanceInfo>}
         </>
       )}
