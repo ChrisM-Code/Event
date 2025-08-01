@@ -15,37 +15,47 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   background: white;
-  padding: 20px;
-  border-radius: 8px;
-  min-width: 300px;
-  max-width: 500px;
+  padding: 15px;
+  border-radius: 5px;
+  min-width: 250px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
   text-align: center;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const ModalEventWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (max-width: 600px) {
+    padding: 5px;
+    font-size: 0.9rem;
+  }
 `;
 
 const CloseButton = styled.button`
   background: #ff4d4d;
   color: white;
   border: none;
-  padding: 8px 12px;
-  margin-top: 10px;
+  padding: 8px 5px;
+  margin-top: 5px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
+
   &:hover {
     background: #cc0000;
   }
 `;
 
-const Modal = ({ children, onClose }) => {
-  return (
-    <ModalOverlay>
-      <ModalContent>
-        {children}
-        <CloseButton onClick={onClose}>Close</CloseButton>
-      </ModalContent>
-    </ModalOverlay>
-  );
-};
+const Modal = ({ children, onClose }) => (
+  <ModalOverlay>
+    <ModalContent>
+      <ModalEventWrapper>{children}</ModalEventWrapper>
+      <CloseButton onClick={onClose}>Close</CloseButton>
+    </ModalContent>
+  </ModalOverlay>
+);
 
 export default Modal;
