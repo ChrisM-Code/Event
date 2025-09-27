@@ -60,28 +60,26 @@ const EventPro = ({
   const [events, setEvents] = useState([
     {
       image: "eve4.jpg",
-      title: "Blockchain Summit 2025",
-      date: "April 18, 2025",
+      title: "AI Summit 2025",
+      date: "August 4, 2025",
       time: "9:00 PM - 11:00 PM",
-      location: "Nairobi",
-      details:
-        "Explore the future of blockchain technology at the Blockchain Summit.",
+      location: "Cape Town",
+      details: "Explore the future of technology at the Blockchain Summit.",
     },
     {
       image: "eve2.jpg",
-      title: "Blockchain Summit 2025",
-      date: "April 14, 2025",
+      title: "Mbaa Ngumbi",
+      date: "August 4, 2025",
       time: "9:00 PM - 9:30 PM",
       location: "Nairobi",
-      details:
-        "Explore the future of blockchain technology at the Blockchain Summit.",
+      details: "Cinema Premiers",
     },
     {
       image: "eve4.jpg",
       title: "Blockchain Summit 2025",
-      date: "April 3, 2025",
+      date: "August 4, 2025",
       time: "9:00 PM - 11:00 PM",
-      location: "Nairobi",
+      location: "Zimbambwe",
       details:
         "Explore the future of blockchain technology at the Blockchain Summit.",
     },

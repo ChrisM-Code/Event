@@ -187,7 +187,6 @@ const Routing = ({ userLocation, eventCoordinates }) => {
       collapsible: false,
     }).addTo(map);
 
-    // ✅ Remove routing panel DOM manually if it still renders
     const panel = document.querySelector(".leaflet-routing-container");
     if (panel) panel.style.display = "none";
 
