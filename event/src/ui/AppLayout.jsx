@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
-//import NavBar from "../components/Home/NavBar";
+import NavBar from "../components/Home/NavBar";
 
 // Styled components for layout
 const LayoutContainer = styled.div`
@@ -29,7 +29,9 @@ const MainContent = styled.main`
 const AppLayout = () => {
   return (
     <LayoutContainer>
-      <Sticky></Sticky>
+      <Sticky>
+        <NavBar />
+      </Sticky>
       <MainContent>
         <Outlet />
       </MainContent>

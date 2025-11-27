@@ -1,25 +1,23 @@
+import { Suspense, lazy, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
-import AppLayout from "./ui/AppLayout";
-import Home from "./components/Home/Home";
-import About from "./components/About/About";
-import Directions from "./components/Directions/Directions";
-import MapComponent from "./components/Directions/Maps/MapComponent";
 import { MapProvider } from "./components/Directions/Maps/MapContext";
-import NavBar from "./components/Home/NavBar";
-import EventPro from "./components/Events/EventPro";
+import LoadingScreen from "./ui/LoadingScreen";
+
+// Lazy imports for all pages/components
+const AppLayout = lazy(() => import("./ui/AppLayout"));
+const Home = lazy(() => import("./components/Home/Home"));
+const About = lazy(() => import("./components/About/About"));
+const Directions = lazy(() => import("./components/Directions/Directions"));
+const MapComponent = lazy(() =>
+  import("./components/Directions/Maps/MapComponent")
+);
+
+const EventPro = lazy(() => import("./components/Events/EventPro"));
+const Dashboard = lazy(() => import("./components/Home/Dashboard"));
 
 const App = () => {
-  const [newEventPosted, setNewEventPosted] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNewEventPosted(true);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleHighlightClick = (event) => {
     setSelectedEvent(event);
@@ -32,31 +30,33 @@ const App = () => {
   };
 
   return (
-    <MapProvider>
-      <NavBar
-        hasNewEvent={newEventPosted}
-        onHighlightClick={handleHighlightClick}
-      />
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route
-            path="events"
-            element={
-              <EventPro
-                onHighlightClick={handleHighlightClick}
-                modalOpen={modalOpen}
-                selectedEvent={selectedEvent}
-                onCloseModal={handleCloseModal}
+    <>
+      <MapProvider>
+        {/* Suspense wraps everything for lazy loading */}
+        <Suspense fallback={<LoadingScreen />}>
+          <Routes>
+            <Route path="/" element={<AppLayout />}>
+              <Route index element={<Home />} />
+              <Route path="about" element={<About />} />
+              <Route
+                path="events"
+                element={
+                  <EventPro
+                    onHighlightClick={handleHighlightClick}
+                    modalOpen={modalOpen}
+                    selectedEvent={selectedEvent}
+                    onCloseModal={handleCloseModal}
+                  />
+                }
               />
-            }
-          />
-          <Route path="directions" element={<Directions />} />
-          <Route path="map" element={<MapComponent />} />
-        </Route>
-      </Routes>
-    </MapProvider>
+              <Route path="directions" element={<Directions />} />
+              <Route path="map" element={<MapComponent />} />
+            </Route>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </Suspense>
+      </MapProvider>
+    </>
   );
 };
 

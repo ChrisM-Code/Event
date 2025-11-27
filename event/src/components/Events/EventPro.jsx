@@ -61,7 +61,7 @@ const EventPro = ({
     {
       image: "eve4.jpg",
       title: "AI Summit 2025",
-      date: "August 4, 2025",
+      date: "October 29, 2025",
       time: "9:00 PM - 11:00 PM",
       location: "Cape Town",
       details: "Explore the future of technology at the Blockchain Summit.",
@@ -69,7 +69,7 @@ const EventPro = ({
     {
       image: "eve2.jpg",
       title: "Mbaa Ngumbi",
-      date: "August 4, 2025",
+      date: "October 23, 2025",
       time: "9:00 PM - 9:30 PM",
       location: "Nairobi",
       details: "Cinema Premiers",
@@ -77,7 +77,7 @@ const EventPro = ({
     {
       image: "eve4.jpg",
       title: "Blockchain Summit 2025",
-      date: "August 4, 2025",
+      date: "October 27, 2025",
       time: "9:00 PM - 11:00 PM",
       location: "Zimbambwe",
       details:

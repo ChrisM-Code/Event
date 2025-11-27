@@ -64,6 +64,7 @@ function EventCard({ event }) {
 
   const handleLocationClick = () => {
     updateDestination(event.location);
+
     navigate("/directions", { state: { location: event.location } });
   };
 
